@@ -1,31 +1,31 @@
 <script lang="ts" setup>
-import {reactive} from 'vue'
-import {Greet} from '../../wailsjs/go/main/App'
+import { useRouter } from 'vue-router'
+import { ArrowLeftBold as Back } from '@element-plus/icons-vue'
+const router = useRouter()
 
-const data = reactive({
-  name: "",
-  resultText: "Please enter your name below 👇",
-})
-
-function greet() {
-  Greet(data.name).then(result => {
-    data.resultText = result
-  })
+const goMain = () => {
+  router.push('/')
 }
 
 </script>
 
 <template>
-  <main>
-    <div id="result" class="result">{{ data.resultText }}</div>
-    <div id="input" class="input-box">
-      <input id="name" v-model="data.name" autocomplete="off" class="input" type="text"/>
-      <button class="btn" @click="greet">Greet</button>
-    </div>
-  </main>
+  <el-icon 
+    @click="goMain" 
+    style="cursor: pointer; margin-right: 10px;"
+    class="back-icon"
+  >
+    <Back />
+  </el-icon>
+  <h1>ElasticSearch</h1>
 </template>
 
 <style scoped>
+.back-icon:hover {
+  color: #409eff;  /* Element Plus 主题色 */
+  transform: scale(1.1);
+  transition: all 0.3s ease;
+}
 .result {
   height: 20px;
   line-height: 20px;
