@@ -9,5 +9,13 @@
   "author": {
     "name": "chen",
     "email": "905014073"
+  },
+  "bindings": {
+    "modules": [
+      {
+        "module": "thing-tool/modules/elasticsearch",
+        "interface": "ESModule"
+      }
+    ]
   }
 }

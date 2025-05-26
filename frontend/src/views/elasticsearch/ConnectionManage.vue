@@ -1,42 +1,56 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { ArrowLeftBold as Back } from '@element-plus/icons-vue'
 // 新增图标导入
 import { Fold, Expand } from '@element-plus/icons-vue'
+import {GeTest} from "../../../wailsjs/go/elasticsearch/ESModule";
+// import type { Connection } from "../../../wailsjs/go/main/App"
 const router = useRouter()
 
-// 模拟连接数据
-const connections = [
-  { id: 1, name: '生产集群', host: 'es-prod.example.com' },
-  { id: 2, name: '测试集群', host: 'es-test.example.com' },
-  { id: 4, name: '本地开发', host: 'localhost:9200' },
-  { id: 5, name: '本地开发', host: 'localhost:9200' },
-  { id: 6, name: '本地开发', host: 'localhost:9200' },
-  { id: 7, name: '本地开发', host: 'localhost:9200' },
-  { id: 8, name: '本地开发', host: 'localhost:9200' },
-  { id: 9, name: '本地开发', host: 'localhost:9200' },
-  { id: 10, name: '本地开发', host: 'localhost:9200' },
-  { id: 11, name: '本地开发', host: 'localhost:9200' },
-  { id: 12, name: '本地开发', host: 'localhost:9200' },
-  { id: 13, name: '本地开发', host: 'localhost:9200' },
-  { id: 14, name: '本地开发', host: 'localhost:9200' },
-  { id: 15, name: '本地开发', host: 'localhost:9200' },
-  { id: 16, name: '本地开发', host: 'localhost:9200' },
-  { id: 17, name: '本地开发', host: 'localhost:9200' },
-  { id: 18, name: '本地开发', host: 'localhost:9200' },
-]
+// let connections = ref<Array<{ Id: number, Name: string, Host: string }>>([])
+// let test = ref<string>("")
+
+type Result = {
+  code: string
+  data: Connection[]
+}
+
+type Connection = {
+  id: number;
+  name: string;
+  host: string;
+  port: string;
+  username: string;
+  password: string;
+};
+const connections = ref<Connection[]>([])
+
+async function fetchConnections() {
+  try {
+    const data = await GeTest()
+    connections.value = data.data
+  } catch (error) {
+    console.error("加载失败:", error)
+  }
+}
+
+fetchConnections()
 
 const goMain = () => {
   router.push('/')
 }
 
-const currentConnection = ref(connections[0])
+const currentConnection = ref({
+  id: 0,
+  name: '',
+  host: ''
+})
 
-// 添加选择处理方法
+// 添加选择处理方
 const handleSelect = (index: string) => {
   const selectedId = parseInt(index)
-  const selectedConn = connections.find(conn => conn.id === selectedId)
+  const selectedConn = connections.value.find((conn: { id: number }) => conn.id === selectedId)
   if (selectedConn) {
     currentConnection.value = selectedConn
   }
@@ -47,6 +61,8 @@ const isCollapsed = ref(false)
 const toggleCollapse = () => {
   isCollapsed.value = !isCollapsed.value
 }
+// 在脚本部分添加导入
+import ConnectionDetail from './ConnectionDetail.vue'
 </script>
 
 <template>
@@ -79,7 +95,7 @@ const toggleCollapse = () => {
         >
           <el-menu-item 
             v-for="conn in connections" 
-            :key="conn.id"
+            :key="conn.id"  
             :index="conn.id.toString()"
           >
             <span class="connection-name">{{ conn.name }}</span>
@@ -90,16 +106,7 @@ const toggleCollapse = () => {
 
       <!-- 右侧内容区域 -->
       <el-main class="connection-detail">
-        <div class="detail-header">
-          <h3>{{ currentConnection.name }}</h3>
-          <el-tag type="info">{{ currentConnection.host }}</el-tag>
-        </div>
-        
-        <!-- 连接详情内容 -->
-        <div class="detail-content">
-
-          <h1>aaaaaaaaaaaaa</h1>
-        </div>
+        <ConnectionDetail :connection="currentConnection" />
       </el-main>
     </el-container>
   </div>

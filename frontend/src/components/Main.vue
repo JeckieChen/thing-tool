@@ -64,7 +64,3 @@ const goElasticSearch = () => {
   background-color: rgba(255, 255, 255, 1);
 }
 </style>
-
-insert into ucs_user values (56, '2yAmw9Ia', '15396284442', NULL, '9cbf8a4dcb8e30682b927f352d6559a0', '15396284442', NULL,NULL,NULL,NULL,1,1726301267335,1726301267335,1726301267335,23,114,NULL);
-
-insert into ucs_user values (57, '2yAmw9Ib', '13794698214', NULL, '9cbf8a4dcb8e30682b927f352d6559a0', '13794698214', NULL,NULL,NULL,NULL,1,1726301267335,1726301267335,1726301267335,23,114,NULL);
