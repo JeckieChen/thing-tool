@@ -1,6 +1,8 @@
 package service
 
 import (
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"thing-tool/modules/elasticsearch/define"
 
@@ -17,14 +19,18 @@ type ESService struct {
 	Client     *resty.Client
 }
 
-var ClientList map[int]*ESService
+var ClientList = make(map[int]*ESService)
 
 func NewESService(id int) *ESService {
 	return ClientList[id]
 }
 
-func SetConnection(id int, connectObj *define.Connect) error {
-	ClientList[id] = &ESService{
+func SetConnection(connectObj *define.Connect) error {
+	v := ClientList[connectObj.Id]
+	if v != nil {
+		delete(ClientList, connectObj.Id)
+	}
+	ClientList[connectObj.Id] = &ESService{
 		Client:     resty.New(),
 		ConnectObj: connectObj,
 	}
@@ -53,11 +59,16 @@ func (es *ESService) GetNodes() *define.ResultsResp {
 	}
 	var result []any
 	resp, err := es.Client.R().SetResult(&result).Get(es.ConnectObj.Host + NodesApi)
+	fmt.Println("nodes====================")
+	fmt.Println(resp)
+	fmt.Println("nodes====================")
 	if err != nil {
 		return &define.ResultsResp{Err: err.Error()}
 	}
 	if resp.StatusCode() != http.StatusOK {
 		return &define.ResultsResp{Err: string(resp.Body())}
 	}
-	return &define.ResultsResp{Results: result}
+	var nodes []define.Node
+	json.Unmarshal(resp.Body(), &nodes)
+	return &define.ResultsResp{Results: nodes}
 }

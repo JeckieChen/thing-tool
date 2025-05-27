@@ -6,10 +6,18 @@ export function GeTest() {
   return window['go']['elasticsearch']['ESModule']['GeTest']();
 }
 
+export function GetNodes(arg1) {
+  return window['go']['elasticsearch']['ESModule']['GetNodes'](arg1);
+}
+
 export function Init(arg1) {
   return window['go']['elasticsearch']['ESModule']['Init'](arg1);
 }
 
-export function TestClient(arg1, arg2, arg3) {
-  return window['go']['elasticsearch']['ESModule']['TestClient'](arg1, arg2, arg3);
+export function SetConnection(arg1, arg2, arg3, arg4) {
+  return window['go']['elasticsearch']['ESModule']['SetConnection'](arg1, arg2, arg3, arg4);
+}
+
+export function TestClient(arg1, arg2, arg3, arg4) {
+  return window['go']['elasticsearch']['ESModule']['TestClient'](arg1, arg2, arg3, arg4);
 }

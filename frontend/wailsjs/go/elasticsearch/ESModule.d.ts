@@ -5,6 +5,10 @@ import {context} from '../models';
 
 export function GeTest():Promise<define.R>;
 
+export function GetNodes(arg1:number):Promise<define.R>;
+
 export function Init(arg1:context.Context):Promise<void>;
 
-export function TestClient(arg1:string,arg2:string,arg3:string):Promise<define.R>;
+export function SetConnection(arg1:number,arg2:string,arg3:string,arg4:string):Promise<define.R>;
+
+export function TestClient(arg1:number,arg2:string,arg3:string,arg4:string):Promise<define.R>;

@@ -3,7 +3,7 @@ package elasticsearch
 import (
 	"context"
 	"thing-tool/define"
-	esDefine "thing-tool/modules/elasticsearch/define"
+	esdefine "thing-tool/modules/elasticsearch/define"
 	"thing-tool/modules/elasticsearch/service"
 )
 
@@ -30,8 +30,7 @@ func (m *ESModule) Init(ctx context.Context) {
 
 func (m *ESModule) GeTest() define.R {
 	d := []Connection{
-		{ID: 1, Name: "生产环境", Host: "10.0.0.1"},
-		{ID: 2, Name: "测试环境", Host: "172.16.32.207", Port: "9200", Username: "elastic", Password: "zg123456"},
+		{ID: 2, Name: "测试环境", Host: "http://172.16.32.207:9200", Port: "9200", Username: "elastic", Password: "zg123456"},
 	}
 	return define.D{
 		"code": 200,
@@ -39,8 +38,13 @@ func (m *ESModule) GeTest() define.R {
 	}
 }
 
-func (m *ESModule) SetConnection(id int, data esDefine.Connect) define.R {
-	service.SetConnection(id, &data)
+func (m *ESModule) SetConnection(id int, host, username, password string) define.R {
+	service.SetConnection(&esdefine.Connect{
+		Id:       id,
+		Host:     host,
+		Username: username,
+		Password: password,
+	})
 	return define.D{
 		"code": 200,
 		"data": "设置成功",
@@ -59,5 +63,20 @@ func (m *ESModule) TestClient(id int, host string, username string, password str
 	return define.D{
 		"code": 200,
 		"data": s,
+	}
+}
+
+func (m *ESModule) GetNodes(id int) define.R {
+	es := service.NewESService(id)
+	g := es.GetNodes()
+	if g.Err != "" {
+		return define.D{
+			"code": 400,
+			"data": g.Err,
+		}
+	}
+	return define.D{
+		"code": 200,
+		"data": g.Results,
 	}
 }
