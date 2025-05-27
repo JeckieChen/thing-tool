@@ -1,16 +1,11 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { ArrowLeftBold as Back } from '@element-plus/icons-vue'
-// 新增图标导入
-import { Fold, Expand } from '@element-plus/icons-vue'
 import {GeTest} from "../../../wailsjs/go/elasticsearch/ESModule";
 import {TestClient, SetConnection, GetNodes} from "../../../wailsjs/go/elasticsearch/ESModule";
 import {
-  Document,
   Menu as IconMenu,
-  Location,
-  Setting,
 } from '@element-plus/icons-vue'
 
 
@@ -85,7 +80,6 @@ const handleClose = (key: string, keyPath: string[]) => {
 
 // 添加选择处理方
 const handleSelect = (index: string) => {  // 参数类型应为 string
-  console.log("click....")
   const selectedId = parseInt(index)
   const selectedConn = connections.value.find((conn: { id: number }) => conn.id === selectedId)
   if (selectedConn) {
@@ -94,7 +88,7 @@ const handleSelect = (index: string) => {  // 参数类型应为 string
 }
 
 // 新增折叠状态
-const isCollapsed = ref(false)
+const isCollapsed = ref(true)
 const toggleCollapse = () => {
   isCollapsed.value = !isCollapsed.value
 }

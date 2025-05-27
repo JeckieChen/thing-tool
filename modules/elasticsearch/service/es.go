@@ -10,8 +10,9 @@ import (
 )
 
 const (
-	HealthApi = "/_cluster/health"
-	NodesApi  = "/_cat/nodes?format=json&pretty&h=ip,name,heap.percent,heap.current,heap.max,ram.percent,ram.current,ram.max,node.role,master,cpu,load_5m,disk.used_percent,disk.used,disk.total,fielddataMemory,queryCacheMemory,requestCacheMemory,segmentsMemory,segments.count"
+	HealthApi   = "/_cluster/health"
+	AllIndexApi = "/_cat/indices?format=json&pretty&bytes=b"
+	NodesApi    = "/_cat/nodes?format=json&pretty&h=ip,name,heap.percent,heap.current,heap.max,ram.percent,ram.current,ram.max,node.role,master,cpu,load_5m,disk.used_percent,disk.used,disk.total,fielddataMemory,queryCacheMemory,requestCacheMemory,segmentsMemory,segments.count"
 )
 
 type ESService struct {
@@ -71,4 +72,26 @@ func (es *ESService) GetNodes() *define.ResultsResp {
 	var nodes []define.Node
 	json.Unmarshal(resp.Body(), &nodes)
 	return &define.ResultsResp{Results: nodes}
+}
+
+func (es *ESService) GetIndexes(name string) *define.ResultsResp {
+	if es.ConnectObj.Host == "" {
+		return &define.ResultsResp{Err: "请先选择一个集群"}
+	}
+	newUrl := es.ConnectObj.Host + AllIndexApi
+	if name != "" {
+		newUrl += "&index=" + "*" + name + "*"
+	}
+	var result []any
+	resp, err := es.Client.R().SetResult(&result).Get(newUrl)
+	if err != nil {
+		return &define.ResultsResp{Err: err.Error()}
+	}
+	if resp.StatusCode() != http.StatusOK {
+		return &define.ResultsResp{Err: string(resp.Body())}
+	}
+	var indexes []define.Index
+	json.Unmarshal(resp.Body(), &indexes)
+	return &define.ResultsResp{Results: indexes}
+
 }

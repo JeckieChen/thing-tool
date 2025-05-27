@@ -80,3 +80,18 @@ func (m *ESModule) GetNodes(id int) define.R {
 		"data": g.Results,
 	}
 }
+
+func (m *ESModule) GetIndexes(id int, name string) define.R {
+	es := service.NewESService(id)
+	g := es.GetIndexes(name)
+	if g.Err != "" {
+		return define.D{
+			"code": 400,
+			"data": g.Err,
+		}
+	}
+	return define.D{
+		"code": 200,
+		"data": g.Results,
+	}
+}
