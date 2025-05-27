@@ -10,3 +10,13 @@ type Connect struct {
 	SkipSSLVerify bool   `json:"skipSSLVerify"`
 	CACert        string `json:"caCert"`
 }
+
+type ResultsResp struct {
+	Results []any  `json:"results"`
+	Err     string `json:"err"`
+}
+
+type ResultResp struct {
+	Result map[string]any `json:"result"`
+	Err    string         `json:"err"`
+}

@@ -15,5 +15,8 @@ func TestClient(t *testing.T) {
 		ConnectObj: &esdefine.Connect{Host: "http://172.16.32.207:9200", Username: "elastic", Password: "zg123456"},
 	}
 	d, _ := es.TestClient("http://172.16.32.207:9200", "elastic", "zg123456")
+
+	g := es.GetNodes()
 	fmt.Println(d)
+	fmt.Println(g.Results[0])
 }

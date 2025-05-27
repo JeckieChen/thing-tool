@@ -3,10 +3,8 @@ package elasticsearch
 import (
 	"context"
 	"thing-tool/define"
-	esdefine "thing-tool/modules/elasticsearch/define"
+	esDefine "thing-tool/modules/elasticsearch/define"
 	"thing-tool/modules/elasticsearch/service"
-
-	"github.com/go-resty/resty/v2"
 )
 
 type ESModule struct {
@@ -41,11 +39,16 @@ func (m *ESModule) GeTest() define.R {
 	}
 }
 
-func (m *ESModule) TestClient(host string, username string, password string) define.R {
-	es := service.ESService{
-		Client:     resty.New(),
-		ConnectObj: &esdefine.Connect{Host: host, Username: username, Password: password},
+func (m *ESModule) SetConnection(id int, data esDefine.Connect) define.R {
+	service.SetConnection(id, &data)
+	return define.D{
+		"code": 200,
+		"data": "设置成功",
 	}
+}
+
+func (m *ESModule) TestClient(id int, host string, username string, password string) define.R {
+	es := service.NewESService(id)
 	s, err := es.TestClient(host, username, password)
 	if s == "" || err != nil {
 		return define.D{
